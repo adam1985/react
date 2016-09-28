@@ -9,7 +9,7 @@ var base_param = {
   xxxx: 111
 };
 var authInfo = {
-  'SID3082451377': 'eyJpdiI6IjNPNXNXNlwvS3FNTXFiMXhtME15cXVBPT0iLCJ2YWx1ZSI6IldmbEJKdjYyaWhEUFppTXoyQWhCaCtnZDhCY2JIMUU5cmpMZ3BmMCt5WUxtdlhcL0ZTcVMzYU55ZlgrZXBKbENaRVwvMUhEcmdSNkk2QmRpZk9CUElESFE9PSIsIm1hYyI6ImQyODgxZDE1ZDQ2ODk5MDM0Njc4Mjc0ZjYxN2Y1OGJmZTFmNjQ1MWQ5ODU1ODcyNjI3Y2EwZGJkYTJlNWNhNzEifQ'
+  'xxx': 'xxxxx'
 };
 var setParams = function(url, params) {
   var str = '';
