@@ -1,3 +1,8 @@
+'use strict';
+/**
+   mock 代码太累，直接代理线上或线下的数据
+   链接：https://github.com/dvajs/dva/issues/110
+*/
 var http = require('http');
 var url = require('url');
 var path = require('path');
@@ -8,6 +13,7 @@ var request_host = request_host_online;
 var base_param = {
   xxxx: 111
 };
+// auth 相关 cookie
 var authInfo = {
   'xxx': 'xxxxx'
 };
