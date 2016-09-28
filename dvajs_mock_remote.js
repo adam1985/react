@@ -7,8 +7,10 @@ var http = require('http');
 var url = require('url');
 var path = require('path');
 var requestInstance = require('request');
+
 var request_host_offline = 'http://offline.baidu.com';
 var request_host_online = 'http://baidu.com';
+
 var request_host = request_host_online;
 var base_param = {
   xxxx: 111
@@ -17,6 +19,7 @@ var base_param = {
 var authInfo = {
   'xxx': 'xxxxx'
 };
+
 var setParams = function(url, params) {
   var str = '';
   for (var i in params) {
