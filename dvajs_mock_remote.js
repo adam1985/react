@@ -1,7 +1,12 @@
 'use strict';
 /**
    mock 代码太累，直接代理线上或线下的数据
-   链接：https://github.com/dvajs/dva/issues/110
+   相关问题：https://github.com/dvajs/dva/issues/110
+   
+   依赖：
+      npm install request
+   剩余问题：
+      表单相关未测试，如有麻烦自行修改发送的参数
 */
 var http = require('http');
 var url = require('url');
@@ -12,12 +17,13 @@ var request_host_offline = 'http://offline.baidu.com';
 var request_host_online = 'http://baidu.com';
 
 var request_host = request_host_online;
+
 var base_param = {
-  xxxx: 111
+  app_id: 10001
 };
-// auth 相关 cookie
+
 var authInfo = {
-  'xxx': 'xxxxx'
+  'xxxx': 'xxxxx'
 };
 
 var setParams = function(url, params) {
@@ -29,6 +35,7 @@ var setParams = function(url, params) {
     ? str
     : ('?' + str.slice(1)));
 };
+
 var getRequestJar = function() {
   var jar = requestInstance.jar();
   var authStr = '';
@@ -39,29 +46,52 @@ var getRequestJar = function() {
   jar.setCookie(cookie, request_host);
   return jar;
 };
-var index = 0;
-var generatorId = function() {
-  return++ index;
+
+var getRequestHeaders = function(request) {
+  var headers = Object.assign(request.headers);
+  headers.host = url.parse(request_host).host;
+  headers.referer = request_host;
+  headers['X-Requested-With'] = 'XMLHttpRequest';
+  return headers;
 };
+
+var generatorId = function() {
+  var index = 0;
+  return function() {
+    return++ index;
+  }
+}();
+
 module.exports = {
   '/api/*' (request, response) {
     var urlParse = url.parse(request.url);
     var request_url = setParams(request_host + urlParse.path, base_param);
+
     var index = generatorId();
     console.log('【' + index + '， request：】' + request_url);
+
     requestInstance({
-      method: 'POST',
+      method: request.method,
       url: request_url,
+      body: request.body,
+      formData: request.formData,
       jar: getRequestJar(),
-      headers: {
-        'X-Requested-With': 'XMLHttpRequest'
-      }
-    }, function(error, res, body) {
-      console.log('【' + index + '，response：】' + res.statusCode);
-      if (res.statusCode === 200) {
-        response.json(JSON.parse(body));
+      headers: getRequestHeaders(request)
+    }, function(error, resp, body) {
+      console.log('【' + index + '，response：】' + resp.statusCode);
+      if (resp.statusCode === 200) {
+        var result;
+        try {
+          result = JSON.parse(body);
+        } catch (ex) {
+          result = {
+            statusCode: resp.statusCode,
+            responseBody: body
+          };
+        }
+        response.json(result);
       } else {
-        response.json({statusCode: r.statusCode, responseBody: body});
+        response.json({statusCode: resp.statusCode, responseBody: body});
       }
     });
   }
